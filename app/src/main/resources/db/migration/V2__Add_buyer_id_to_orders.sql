@@ -1,2 +1,0 @@
-ALTER TABLE
-    orders ADD COLUMN buyer_id VARCHAR(36) NOT NULL;

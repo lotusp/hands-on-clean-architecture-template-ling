@@ -1,3 +1,0 @@
-ALTER TABLE
-    orders ADD COLUMN product_id VARCHAR(36) NOT NULL,
-    ADD COLUMN quantity INT NOT NULL;

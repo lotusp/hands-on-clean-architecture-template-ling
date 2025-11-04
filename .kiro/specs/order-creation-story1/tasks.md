@@ -6,33 +6,33 @@
   - 清理相关的测试文件
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 2. 创建领域层核心值对象
-  - [ ] 2.1 创建 MerchantId 值对象
+- [x] 2. 创建领域层核心值对象
+  - [x] 2.1 创建 MerchantId 值对象
     - 实现 record 类型的 MerchantId
     - _Requirements: 1.1_
   
-  - [ ] 2.2 创建 DishId 值对象
+  - [x] 2.2 创建 DishId 值对象
     - 实现 record 类型的 DishId
     - _Requirements: 1.1_
   
-  - [ ] 2.3 创建 OrderNumber 值对象
+  - [x] 2.3 创建 OrderNumber 值对象
     - 实现订单号生成逻辑（yyyyMMddHHmmss + 6位随机数）
     - 使用 ThreadLocalRandom 保证线程安全
     - _Requirements: 1.1.2_
   
-  - [ ] 2.4 创建 DeliveryInfo 值对象
+  - [x] 2.4 创建 DeliveryInfo 值对象
     - 包含 recipientName、recipientPhone、address 字段
     - 实现手机号格式验证逻辑
     - 实现地址长度验证
     - _Requirements: 1.1.8, 1.1.10, 1.3.2_
   
-  - [ ] 2.5 创建 OrderItem 值对象
+  - [x] 2.5 创建 OrderItem 值对象
     - 包含 dishId、dishName、quantity、price 字段
     - 实现 subtotal() 方法计算小计
     - 实现数量和价格验证
     - _Requirements: 1.1.7, 1.2.1, 1.3.1_
   
-  - [ ] 2.6 创建 Pricing 值对象
+  - [x] 2.6 创建 Pricing 值对象
     - 包含 itemsTotal、packagingFee、deliveryFee、finalAmount 字段
     - 定义打包费和配送费常量
     - 实现静态工厂方法 calculate(List<OrderItem>)

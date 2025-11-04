@@ -4,7 +4,8 @@ import com.example.demo.adapter.persistence.order.OrderEntity;
 import com.example.demo.adapter.persistence.order.OrderEntityRepository;
 import com.example.demo.domain.order.Order;
 import com.example.demo.domain.order.OrderId;
-import com.example.demo.domain.product.ProductId;
+import com.example.demo.domain.order.OrderNumber;
+import com.example.demo.domain.merchant.MerchantId;
 import com.example.demo.domain.user.UserId;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -16,30 +17,20 @@ public class OrderPersistenceAdapter {
 
     private final OrderEntityRepository orderEntityRepository;
 
+    // TODO: This is a temporary implementation. Will be properly implemented in task 5.6
+    // Currently the OrderEntity structure doesn't match the new Order domain model
     public void save(Order order) {
-        OrderEntity orderEntity = new OrderEntity(
-                order.getId().value(),
-                order.getBuyerId().value(),
-                order.getProductId().value(),
-                order.getQuantity(),
-                order.getStatus(),
-                order.getPrice(),
-                order.getCreatedDate(),
-                order.getLastModifiedDate());
-        orderEntityRepository.save(orderEntity);
+        // Temporary stub - will be implemented in task 5
+        throw new UnsupportedOperationException(
+            "OrderPersistenceAdapter.save() needs to be implemented in task 5.6 after OrderEntity is updated"
+        );
     }
 
+    // TODO: This is a temporary implementation. Will be properly implemented in task 5.6
     public Optional<Order> findById(OrderId orderId) {
-        return orderEntityRepository
-                .findById(orderId.value())
-                .map(orderEntity -> new Order(
-                        new OrderId(orderEntity.getId()),
-                        new UserId(orderEntity.getBuyerId()),
-                        new ProductId(orderEntity.getProductId()),
-                        orderEntity.getQuantity(),
-                        orderEntity.getStatus(),
-                        orderEntity.getPrice(),
-                        orderEntity.getCreatedDate(),
-                        orderEntity.getLastModifiedDate()));
+        // Temporary stub - will be implemented in task 5
+        throw new UnsupportedOperationException(
+            "OrderPersistenceAdapter.findById() needs to be implemented in task 5.6 after OrderEntity is updated"
+        );
     }
 }

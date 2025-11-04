@@ -38,13 +38,13 @@
     - 实现静态工厂方法 calculate(List<OrderItem>)
     - _Requirements: 1.2.1, 1.2.2, 1.2.3, 1.2.4_
 
-- [ ] 3. 重构 Order 领域模型
-  - [ ] 3.1 更新 Order 类字段
+- [x] 3. 重构 Order 领域模型
+  - [x] 3.1 更新 Order 类字段
     - 添加 orderNumber、merchantId、items、deliveryInfo、remark、pricing 字段
     - 移除 productId、quantity、price 字段
     - _Requirements: 1.3.1, 1.3.2, 1.3.3_
   
-  - [ ] 3.2 实现 Order 构造方法
+  - [x] 3.2 实现 Order 构造方法
     - 创建接受 userId、merchantId、items、deliveryInfo、remark 的构造方法
     - 自动生成 OrderNumber
     - 设置状态为 PENDING_PAYMENT
@@ -53,7 +53,7 @@
     - 验证所有 items 属于同一商家
     - _Requirements: 1.1.1, 1.1.2, 1.1.3, 1.1.5, 1.1.6, 1.2.4_
   
-  - [ ] 3.3 更新 OrderStatus 枚举
+  - [x] 3.3 更新 OrderStatus 枚举
     - 添加 PENDING_PAYMENT 状态
     - 保留 PAID、CANCELLED 状态
     - _Requirements: 1.1.3_

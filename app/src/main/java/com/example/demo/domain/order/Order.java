@@ -43,6 +43,7 @@ public class Order {
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();
     }
+
     public Order(
             OrderId id,
             OrderNumber orderNumber,

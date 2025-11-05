@@ -38,7 +38,7 @@
     - 实现静态工厂方法 calculate(List<OrderItem>)
     - _Requirements: 1.2.1, 1.2.2, 1.2.3, 1.2.4_
 
-- [x] 3. 重构 Order 领域模型
+- [ ] 3. 重构 Order 领域模型
   - [x] 3.1 更新 Order 类字段
     - 添加 orderNumber、merchantId、items、deliveryInfo、remark、pricing 字段
     - 移除 productId、quantity、price 字段
@@ -58,12 +58,12 @@
     - 保留 PAID、CANCELLED 状态
     - _Requirements: 1.1.3_
 
-- [ ] 4. 创建应用层服务和异常
-  - [ ] 4.1 创建 MultiMerchantOrderException
+- [x] 4. 创建应用层服务和异常
+  - [x] 4.1 创建 MultiMerchantOrderException
     - 定义异常类和错误消息
     - _Requirements: 1.1.5_
   
-  - [ ] 4.2 创建 CreateOrderService
+  - [x] 4.2 创建 CreateOrderService
     - 定义 CreateOrderCommand record（包含嵌套的 OrderItemDto 和 DeliveryInfoDto）
     - 定义 CreateOrderResult record（包含嵌套的 PricingDto）
     - 实现 createOrder(CreateOrderCommand) 方法
@@ -74,33 +74,33 @@
     - _Requirements: 1.1.1, 1.1.4, 1.1.5, 1.3.6_
 
 - [ ] 5. 创建数据库迁移和持久化层
-  - [ ] 5.1 创建数据库迁移脚本
+  - [x] 5.1 创建数据库迁移脚本
     - 创建 V1__Create_orders_and_order_items_tables.sql
     - 定义 orders 表结构（包含所有必需字段和索引）
     - 定义 order_items 表结构（包含外键约束）
     - _Requirements: 1.3.4, 1.3.5_
   
-  - [ ] 5.2 创建 OrderItemEntity
+  - [x] 5.2 创建 OrderItemEntity
     - 定义 JPA 实体类
     - 配置与 orders 表的关联关系
     - _Requirements: 1.3.1_
   
-  - [ ] 5.3 创建 DeliveryInfoEmbeddable
+  - [x] 5.3 创建 DeliveryInfoEmbeddable
     - 定义 @Embeddable 类
     - _Requirements: 1.3.2_
   
-  - [ ] 5.4 创建 PricingEmbeddable
+  - [x] 5.4 创建 PricingEmbeddable
     - 定义 @Embeddable 类
     - 配置字段映射
     - _Requirements: 1.2.5, 1.3.5_
   
-  - [ ] 5.5 重构 OrderEntity
+  - [x] 5.5 重构 OrderEntity
     - 更新字段映射新的 Order 模型
     - 配置 @OneToMany 关系到 OrderItemEntity
     - 配置 @Embedded 关系到 DeliveryInfoEmbeddable 和 PricingEmbeddable
     - _Requirements: 1.3.1, 1.3.2, 1.3.3, 1.3.4, 1.3.5_
   
-  - [ ] 5.6 重构 OrderPersistenceAdapter
+  - [x] 5.6 重构 OrderPersistenceAdapter
     - 更新 save() 方法的实体转换逻辑
     - 更新 findById() 方法的领域对象转换逻辑
     - 实现 toEntity(Order) 私有方法
@@ -108,7 +108,7 @@
     - _Requirements: 1.3.1, 1.3.2, 1.3.3, 1.3.4, 1.3.5_
 
 - [ ] 6. 创建 Web 适配器层
-  - [ ] 6.1 创建 CreateOrderController
+  - [x] 6.1 创建 CreateOrderController
     - 定义 CreateOrderRequest record（包含嵌套的 OrderItemRequest 和 DeliveryInfoRequest）
     - 添加 Bean Validation 注解
     - 实现 POST /api/v1/orders 端点
@@ -116,7 +116,7 @@
     - 返回 201 Created 状态码
     - _Requirements: 1.1.4, 1.1.7, 1.1.8, 1.1.9, 1.1.10, 1.3.6_
   
-  - [ ] 6.2 创建 CreateOrderAdapter
+  - [x] 6.2 创建 CreateOrderAdapter
     - 定义 CreateOrderResponse record（包含嵌套的 OrderData 和 PricingData）
     - 实现 createOrder(CreateOrderRequest, User) 方法
     - 将 CreateOrderRequest 转换为 CreateOrderCommand
@@ -124,7 +124,7 @@
     - 将 CreateOrderResult 转换为 CreateOrderResponse
     - _Requirements: 1.3.6_
   
-  - [ ] 6.3 更新 WebExceptionHandler
+  - [x] 6.3 更新 WebExceptionHandler
     - 添加 MultiMerchantOrderException 的处理（返回 400）
     - 确保 MethodArgumentNotValidException 正确处理
     - 返回统一的错误响应格式

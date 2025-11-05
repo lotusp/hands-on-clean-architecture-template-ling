@@ -31,7 +31,7 @@ class GetOrderControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void shouldGetOrderSuccessfully() throws Exception {
+    void get_order_should_succeed_with_valid_order_id() throws Exception {
         // Given - Create an order first
         String orderId = createTestOrder("test-user-001");
 
@@ -63,7 +63,7 @@ class GetOrderControllerTest {
     }
 
     @Test
-    void shouldReturn404WhenOrderDoesNotExist() throws Exception {
+    void get_order_should_return_404_when_order_does_not_exist() throws Exception {
         // Given - Non-existent order ID
         String nonExistentOrderId = "550e8400-e29b-41d4-a716-446655440000";
 
@@ -76,7 +76,7 @@ class GetOrderControllerTest {
     }
 
     @Test
-    void shouldReturn404WhenAccessingOtherUsersOrder() throws Exception {
+    void get_order_should_return_404_when_accessing_other_users_order() throws Exception {
         // Given - Create an order for user-001
         String orderId = createTestOrder("test-user-001");
 
@@ -89,7 +89,7 @@ class GetOrderControllerTest {
     }
 
     @Test
-    void shouldReturn403WhenNotAuthenticated() throws Exception {
+    void get_order_should_return_403_when_not_authenticated() throws Exception {
         // Given - Create an order
         String orderId = createTestOrder("test-user-001");
 
@@ -100,7 +100,7 @@ class GetOrderControllerTest {
     }
 
     @Test
-    void shouldReturnOrderWithMultipleItems() throws Exception {
+    void get_order_should_return_order_with_multiple_items() throws Exception {
         // Given - Create an order with multiple items
         String orderId = createTestOrderWithMultipleItems("test-user-003");
 
@@ -120,7 +120,7 @@ class GetOrderControllerTest {
     }
 
     @Test
-    void shouldReturnOrderWithRemark() throws Exception {
+    void get_order_should_return_order_with_remark() throws Exception {
         // Given - Create an order with remark
         String orderId = createTestOrderWithRemark("test-user-004", "少辣");
 

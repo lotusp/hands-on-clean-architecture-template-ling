@@ -30,7 +30,7 @@ class CreateOrderControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void shouldCreateOrderSuccessfully() throws Exception {
+    void create_order_should_succeed_with_valid_request() throws Exception {
         // Given
         CreateOrderController.CreateOrderRequest request = createValidOrderRequest();
 
@@ -63,7 +63,7 @@ class CreateOrderControllerTest {
     }
 
     @Test
-    void shouldRejectOrderWithMissingMerchantId() throws Exception {
+    void create_order_should_reject_request_with_missing_merchant_id() throws Exception {
         // Given
         CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
                 null, // missing merchantId
@@ -81,7 +81,7 @@ class CreateOrderControllerTest {
     }
 
     @Test
-    void shouldRejectOrderWithMissingItems() throws Exception {
+    void create_order_should_reject_request_with_missing_items() throws Exception {
         // Given
         CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
                 "merchant-001",
@@ -99,7 +99,7 @@ class CreateOrderControllerTest {
     }
 
     @Test
-    void shouldRejectOrderWithEmptyItems() throws Exception {
+    void create_order_should_reject_request_with_empty_items() throws Exception {
         // Given
         CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
                 "merchant-001",
@@ -117,7 +117,7 @@ class CreateOrderControllerTest {
     }
 
     @Test
-    void shouldRejectOrderWithMissingDeliveryInfo() throws Exception {
+    void create_order_should_reject_request_with_missing_delivery_info() throws Exception {
         // Given
         CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
                 "merchant-001",
@@ -135,7 +135,7 @@ class CreateOrderControllerTest {
     }
 
     @Test
-    void shouldRejectOrderWithInvalidPhoneNumber() throws Exception {
+    void create_order_should_reject_request_with_invalid_phone_number() throws Exception {
         // Given
         CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
                 "merchant-001",
@@ -156,7 +156,7 @@ class CreateOrderControllerTest {
     }
 
     @Test
-    void shouldRejectOrderWithTooLongRemark() throws Exception {
+    void create_order_should_reject_request_with_too_long_remark() throws Exception {
         // Given
         String longRemark = "a".repeat(201); // 201 characters
         CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
@@ -172,7 +172,7 @@ class CreateOrderControllerTest {
     }
 
     @Test
-    void shouldRejectOrderWithTooLongAddress() throws Exception {
+    void create_order_should_reject_request_with_too_long_address() throws Exception {
         // Given
         String longAddress = "a".repeat(501); // 501 characters
         CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
@@ -191,7 +191,7 @@ class CreateOrderControllerTest {
     }
 
     @Test
-    void shouldRejectOrderWithInvalidQuantity() throws Exception {
+    void create_order_should_reject_request_with_invalid_quantity() throws Exception {
         // Given
         CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
                 "merchant-001",
@@ -213,7 +213,7 @@ class CreateOrderControllerTest {
     }
 
     @Test
-    void shouldCalculatePriceCorrectlyWithMultipleItems() throws Exception {
+    void create_order_should_calculate_price_correctly_with_multiple_items() throws Exception {
         // Given
         CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
                 "merchant-001",
@@ -242,7 +242,7 @@ class CreateOrderControllerTest {
     }
 
     @Test
-    void shouldCreateOrderWithRemark() throws Exception {
+    void create_order_should_succeed_with_remark() throws Exception {
         // Given
         CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
                 "merchant-001", List.of(createValidOrderItem()), createValidDeliveryInfo(), "少辣");

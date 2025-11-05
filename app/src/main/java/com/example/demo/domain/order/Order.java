@@ -68,12 +68,4 @@ public class Order {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-
-    public void pay() {
-        if (this.status != OrderStatus.PENDING_PAYMENT) {
-            throw new IllegalStateException("只有待支付状态的订单才能支付");
-        }
-        this.status = OrderStatus.PAID;
-        updatedAt = Instant.now();
-    }
 }

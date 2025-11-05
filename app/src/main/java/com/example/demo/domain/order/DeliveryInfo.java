@@ -2,11 +2,7 @@ package com.example.demo.domain.order;
 
 import java.util.regex.Pattern;
 
-public record DeliveryInfo(
-    String recipientName,
-    String recipientPhone,
-    String address
-) {
+public record DeliveryInfo(String recipientName, String recipientPhone, String address) {
     private static final Pattern PHONE_PATTERN = Pattern.compile("^1[3-9]\\d{9}$");
     private static final int MAX_ADDRESS_LENGTH = 500;
 

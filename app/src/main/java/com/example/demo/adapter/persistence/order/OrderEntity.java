@@ -30,23 +30,23 @@ import lombok.Setter;
 public class OrderEntity {
     @Id
     private String id;
-    
+
     private String orderNumber;
     private String userId;
     private String merchantId;
-    
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "orderId")
     private List<OrderItemEntity> items = new ArrayList<>();
-    
+
     @Embedded
     private DeliveryInfoEmbeddable deliveryInfo;
-    
+
     private String remark;
-    
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
-    
+
     @Embedded
     @AttributeOverrides({
         @AttributeOverride(name = "itemsTotal", column = @Column(name = "items_total")),
@@ -55,7 +55,7 @@ public class OrderEntity {
         @AttributeOverride(name = "finalAmount", column = @Column(name = "final_amount"))
     })
     private PricingEmbeddable pricing;
-    
+
     private Instant createdAt;
     private Instant updatedAt;
 }

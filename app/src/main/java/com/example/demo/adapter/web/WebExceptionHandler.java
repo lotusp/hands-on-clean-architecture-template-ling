@@ -1,72 +1,66 @@
 package com.example.demo.adapter.web;
 
-import com.example.demo.application.service.MultiMerchantOrderException;
 import com.example.demo.application.service.OrderNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.ErrorResponse;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * Global exception handler for web layer.
- * Requirements: 1.1.4, 1.1.5, 1.3.7
  */
 @RestControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
 public class WebExceptionHandler {
-    
+
     @ExceptionHandler(IllegalStateException.class)
-    public ErrorResponse handleException(IllegalStateException ex) {
-        return errorResponse(ex, HttpStatus.CONFLICT);
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ProblemDetail handleException(IllegalStateException ex) {
+        return createProblemDetail(ex, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ErrorResponse handleException(ConstraintViolationException ex) {
-        return errorResponse(ex, HttpStatus.BAD_REQUEST);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleException(ConstraintViolationException ex) {
+        return createProblemDetail(ex, HttpStatus.BAD_REQUEST);
     }
 
-    /**
-     * Handles validation errors from @Valid annotations.
-     * Requirement: 1.1.4
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorResponse handleException(MethodArgumentNotValidException ex) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleException(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult().getFieldErrors().stream()
-            .map(error -> error.getField() + ": " + error.getDefaultMessage())
-            .reduce((a, b) -> a + "; " + b)
-            .orElse("请求参数验证失败");
-        
-        return ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, message)
-                .title("ValidationError")
-                .build();
-    }
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .reduce((a, b) -> a + "; " + b)
+                .orElse("请求参数验证失败");
 
-    /**
-     * Handles multi-merchant order exception.
-     * Requirement: 1.1.5
-     */
-    @ExceptionHandler(MultiMerchantOrderException.class)
-    public ErrorResponse handleException(MultiMerchantOrderException ex) {
-        return errorResponse(ex, HttpStatus.BAD_REQUEST);
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, message);
+        problemDetail.setTitle("ValidationError");
+        return problemDetail;
     }
 
     @ExceptionHandler(OrderNotFoundException.class)
-    public ErrorResponse handleException(OrderNotFoundException ex) {
-        return errorResponse(ex, HttpStatus.NOT_FOUND);
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleException(OrderNotFoundException ex) {
+        return createProblemDetail(ex, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
-    public ErrorResponse handleException(Exception ex) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ProblemDetail handleException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return errorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        return createProblemDetail(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private static ErrorResponse errorResponse(Exception exception, HttpStatus status) {
-        return ErrorResponse.builder(exception, status, exception.getMessage())
-                .title(exception.getClass().getSimpleName())
-                .build();
+    private static ProblemDetail createProblemDetail(Exception exception, HttpStatus status) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, exception.getMessage());
+        problemDetail.setTitle(exception.getClass().getSimpleName());
+        return problemDetail;
     }
 }

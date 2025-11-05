@@ -1,7 +1,7 @@
 package com.example.demo.domain.order;
 
 public enum OrderStatus {
-    PENDING_PAYMENT,  // 待支付 (Requirement 1.1.3)
-    PAID,             // 已支付
-    CANCELLED         // 已取消
+    PENDING_PAYMENT, // 待支付
+    PAID, // 已支付
+    CANCELLED // 已取消
 }

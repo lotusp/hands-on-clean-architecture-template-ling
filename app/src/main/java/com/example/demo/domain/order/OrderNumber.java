@@ -10,10 +10,8 @@ public record OrderNumber(String value) {
     }
 
     private static String generateOrderNumber() {
-        String timestamp = LocalDateTime.now()
-            .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String random = String.format("%06d", 
-            ThreadLocalRandom.current().nextInt(1000000));
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String random = String.format("%06d", ThreadLocalRandom.current().nextInt(1000000));
         return timestamp + random;
     }
 }

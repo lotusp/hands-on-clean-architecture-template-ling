@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * Adapter for converting web requests to application commands and results to responses.
- * Requirements: 1.3.6
  */
 @Component
 @RequiredArgsConstructor
@@ -20,43 +19,14 @@ public class CreateOrderAdapter {
 
     private final CreateOrderService createOrderService;
 
-    /**
-     * Response for order creation.
-     */
-    public record CreateOrderResponse(
-        int code,
-        String message,
-        OrderData data
-    ) {
-        /**
-         * Order data in the response.
-         */
+    public record CreateOrderResponse(int code, String message, OrderData data) {
         public record OrderData(
-            String orderId,
-            String orderNumber,
-            String status,
-            PricingData pricing,
-            String createdAt
-        ) {}
+                String orderId, String orderNumber, String status, PricingData pricing, String createdAt) {}
 
-        /**
-         * Pricing data in the response.
-         */
         public record PricingData(
-            BigDecimal itemsTotal,
-            BigDecimal packagingFee,
-            BigDecimal deliveryFee,
-            BigDecimal finalAmount
-        ) {}
+                BigDecimal itemsTotal, BigDecimal packagingFee, BigDecimal deliveryFee, BigDecimal finalAmount) {}
     }
 
-    /**
-     * Creates an order by converting the request to a command and the result to a response.
-     * 
-     * @param request the order creation request
-     * @param user the authenticated user
-     * @return the order creation response
-     */
     public CreateOrderResponse createOrder(CreateOrderRequest request, User user) {
         // Convert request to command
         CreateOrderCommand command = toCommand(request, user);
@@ -70,65 +40,46 @@ public class CreateOrderAdapter {
 
     /**
      * Converts a CreateOrderRequest to a CreateOrderCommand.
-     * 
+     *
      * @param request the web request
      * @param user the authenticated user
      * @return the application command
      */
     private CreateOrderCommand toCommand(CreateOrderRequest request, User user) {
         List<CreateOrderCommand.OrderItemDto> itemDtos = request.items().stream()
-            .map(item -> new CreateOrderCommand.OrderItemDto(
-                item.dishId(),
-                item.dishName(),
-                item.quantity(),
-                item.price()
-            ))
-            .toList();
+                .map(item -> new CreateOrderCommand.OrderItemDto(
+                        item.dishId(), item.dishName(), item.quantity(), item.price()))
+                .toList();
 
-        CreateOrderCommand.DeliveryInfoDto deliveryInfoDto = 
-            new CreateOrderCommand.DeliveryInfoDto(
+        CreateOrderCommand.DeliveryInfoDto deliveryInfoDto = new CreateOrderCommand.DeliveryInfoDto(
                 request.deliveryInfo().recipientName(),
                 request.deliveryInfo().recipientPhone(),
-                request.deliveryInfo().address()
-            );
+                request.deliveryInfo().address());
 
         return new CreateOrderCommand(
-            user.getUsername(),
-            request.merchantId(),
-            itemDtos,
-            deliveryInfoDto,
-            request.remark()
-        );
+                user.getUsername(), request.merchantId(), itemDtos, deliveryInfoDto, request.remark());
     }
 
     /**
      * Converts a CreateOrderResult to a CreateOrderResponse.
-     * 
+     *
      * @param result the application result
      * @return the web response
      */
     private CreateOrderResponse toResponse(CreateOrderResult result) {
-        CreateOrderResponse.PricingData pricingData = 
-            new CreateOrderResponse.PricingData(
+        CreateOrderResponse.PricingData pricingData = new CreateOrderResponse.PricingData(
                 result.pricing().itemsTotal(),
                 result.pricing().packagingFee(),
                 result.pricing().deliveryFee(),
-                result.pricing().finalAmount()
-            );
+                result.pricing().finalAmount());
 
-        CreateOrderResponse.OrderData orderData = 
-            new CreateOrderResponse.OrderData(
+        CreateOrderResponse.OrderData orderData = new CreateOrderResponse.OrderData(
                 result.orderId(),
                 result.orderNumber(),
                 result.status(),
                 pricingData,
-                result.createdAt().toString()
-            );
+                result.createdAt().toString());
 
-        return new CreateOrderResponse(
-            0,
-            "订单创建成功",
-            orderData
-        );
+        return new CreateOrderResponse(0, "订单创建成功", orderData);
     }
 }

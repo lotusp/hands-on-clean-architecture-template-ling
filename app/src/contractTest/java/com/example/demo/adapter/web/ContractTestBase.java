@@ -1,6 +1,7 @@
 package com.example.demo.adapter.web;
 
 import com.example.demo.application.service.CreateOrderService;
+import com.example.demo.application.service.GetOrderService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ abstract class ContractTestBase {
 
     @MockitoBean
     CreateOrderService createOrderService;
+
+    @MockitoBean
+    GetOrderService getOrderService;
 
     @BeforeEach
     public void setup() {

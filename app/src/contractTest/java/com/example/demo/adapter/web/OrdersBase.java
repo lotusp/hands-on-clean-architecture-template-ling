@@ -1,12 +1,16 @@
 package com.example.demo.adapter.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.assertArg;
 import static org.mockito.Mockito.*;
 
 import com.example.demo.application.service.CreateOrderService;
+import com.example.demo.application.service.GetOrderService;
+import com.example.demo.application.service.OrderNotFoundException;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
@@ -17,6 +21,7 @@ public abstract class OrdersBase extends ContractTestBase {
     public void setup() {
         super.setup();
 
+        // Mock CreateOrderService
         when(createOrderService.createOrder(any())).thenAnswer(invocation -> {
             CreateOrderService.CreateOrderCommand command = invocation.getArgument(0);
 
@@ -35,6 +40,38 @@ public abstract class OrdersBase extends ContractTestBase {
                     new CreateOrderService.CreateOrderResult.PricingDto(
                             itemsTotal, packagingFee, deliveryFee, finalAmount),
                     Instant.parse("2025-11-05T02:27:30.745152Z"));
+        });
+
+        // Mock GetOrderService
+        when(getOrderService.getOrder(any())).thenAnswer(invocation -> {
+            GetOrderService.GetOrderQuery query = invocation.getArgument(0);
+
+            if ("order-id-1".equals(query.orderId())) {
+                return new GetOrderService.GetOrderResult(
+                        "order-id-1",
+                        "20251105102730996280",
+                        "user-token",
+                        "merchant-001",
+                        List.of(new GetOrderService.GetOrderResult.OrderItemDto(
+                                "dish-001",
+                                "宫保鸡丁",
+                                2,
+                                new BigDecimal("25.00"))),
+                        new GetOrderService.GetOrderResult.DeliveryInfoDto(
+                                "张三",
+                                "13800138000",
+                                "北京市朝阳区xxx街道xxx号"),
+                        "少辣",
+                        "PENDING_PAYMENT",
+                        new GetOrderService.GetOrderResult.PricingDto(
+                                new BigDecimal("50.00"),
+                                new BigDecimal("1.00"),
+                                new BigDecimal("3.00"),
+                                new BigDecimal("54.00")),
+                        Instant.parse("2025-11-05T02:27:30.745152Z"));
+            } else {
+                throw new OrderNotFoundException("订单不存在");
+            }
         });
     }
 
@@ -58,3 +95,4 @@ public abstract class OrdersBase extends ContractTestBase {
         }
     }
 }
+

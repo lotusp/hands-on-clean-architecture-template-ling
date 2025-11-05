@@ -3,6 +3,3 @@ spring:
     compose:
       skip:
         in-tests: false
-example:
-  inventory:
-    base-url: http://inventory/api

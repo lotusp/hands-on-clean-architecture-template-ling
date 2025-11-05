@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * Global exception handler for web layer.
@@ -49,6 +50,17 @@ public class WebExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleException(OrderNotFoundException ex) {
         return createProblemDetail(ex, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handle static resource not found exceptions (e.g., favicon.ico).
+     * These are common browser requests and should not be logged as errors.
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleNoResourceFoundException(NoResourceFoundException ex) {
+        // Silently ignore - browsers often request favicon.ico and other static resources
+        // No need to log or return a response body
     }
 
     @ExceptionHandler(Exception.class)

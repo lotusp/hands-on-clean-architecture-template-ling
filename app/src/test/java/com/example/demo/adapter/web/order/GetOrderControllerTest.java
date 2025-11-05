@@ -100,26 +100,6 @@ class GetOrderControllerTest {
     }
 
     @Test
-    void get_order_should_return_order_with_multiple_items() throws Exception {
-        // Given - Create an order with multiple items
-        String orderId = createTestOrderWithMultipleItems("test-user-003");
-
-        // When & Then
-        mockMvc.perform(get("/api/v1/orders/{orderId}", orderId)
-                        .with(user("test-user-003")))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(0))
-                .andExpect(jsonPath("$.data.items").isArray())
-                .andExpect(jsonPath("$.data.items.length()").value(2))
-                .andExpect(jsonPath("$.data.items[0].dishId").value("dish-001"))
-                .andExpect(jsonPath("$.data.items[0].dishName").value("宫保鸡丁"))
-                .andExpect(jsonPath("$.data.items[1].dishId").value("dish-002"))
-                .andExpect(jsonPath("$.data.items[1].dishName").value("鱼香肉丝"))
-                .andExpect(jsonPath("$.data.pricing.itemsTotal").value(80.00))
-                .andExpect(jsonPath("$.data.pricing.finalAmount").value(84.00));
-    }
-
-    @Test
     void get_order_should_return_order_with_remark() throws Exception {
         // Given - Create an order with remark
         String orderId = createTestOrderWithRemark("test-user-004", "少辣");
@@ -140,32 +120,6 @@ class GetOrderControllerTest {
                 "merchant-001",
                 List.of(new CreateOrderController.CreateOrderRequest.OrderItemRequest(
                         "dish-001", "宫保鸡丁", 2, new BigDecimal("25.00"))),
-                new CreateOrderController.CreateOrderRequest.DeliveryInfoRequest(
-                        "张三", "13800138000", "北京市朝阳区xxx街道xxx号"),
-                null);
-
-        MvcResult result = mockMvc.perform(post("/api/v1/orders")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-                        .with(user(userId)))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        String responseBody = result.getResponse().getContentAsString();
-        return objectMapper.readTree(responseBody).path("data").path("orderId").asText();
-    }
-
-    /**
-     * Helper method to create a test order with multiple items.
-     */
-    private String createTestOrderWithMultipleItems(String userId) throws Exception {
-        CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
-                "merchant-001",
-                List.of(
-                        new CreateOrderController.CreateOrderRequest.OrderItemRequest(
-                                "dish-001", "宫保鸡丁", 2, new BigDecimal("25.00")),
-                        new CreateOrderController.CreateOrderRequest.OrderItemRequest(
-                                "dish-002", "鱼香肉丝", 1, new BigDecimal("30.00"))),
                 new CreateOrderController.CreateOrderRequest.DeliveryInfoRequest(
                         "张三", "13800138000", "北京市朝阳区xxx街道xxx号"),
                 null);

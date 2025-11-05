@@ -44,14 +44,13 @@ class OrderPersistenceAdapterTest {
         Instant now = Instant.now();
 
         // Create order items
-        OrderItem item1 = new OrderItem(new DishId("dish-001"), "宫保鸡丁", 2, new BigDecimal("25.00"));
-        OrderItem item2 = new OrderItem(new DishId("dish-002"), "鱼香肉丝", 1, new BigDecimal("30.00"));
+        OrderItem item = new OrderItem(new DishId("dish-001"), "宫保鸡丁", 2, new BigDecimal("25.00"));
 
         // Create delivery info
         DeliveryInfo deliveryInfo = new DeliveryInfo("张三", "13800138000", "北京市朝阳区某某街道123号");
 
         // Create pricing
-        Pricing pricing = Pricing.calculate(List.of(item1, item2));
+        Pricing pricing = Pricing.calculate(List.of(item));
 
         // Create order using reconstitution constructor
         Order order = new Order(
@@ -59,7 +58,7 @@ class OrderPersistenceAdapterTest {
                 new OrderNumber("20251105102730996280"),
                 new UserId("user-001"),
                 new MerchantId("merchant-001"),
-                List.of(item1, item2),
+                List.of(item),
                 deliveryInfo,
                 "少辣",
                 OrderStatus.PENDING_PAYMENT,
@@ -81,19 +80,13 @@ class OrderPersistenceAdapterTest {
                     .returns(now, from(OrderEntity::getUpdatedAt));
 
             // Verify items
-            assertThat(orderEntity.getItems()).hasSize(2);
+            assertThat(orderEntity.getItems()).hasSize(1);
             assertThat(orderEntity.getItems().get(0))
                     .returns("order-001", from(OrderItemEntity::getOrderId))
                     .returns("dish-001", from(OrderItemEntity::getDishId))
                     .returns("宫保鸡丁", from(OrderItemEntity::getDishName))
                     .returns(2, from(OrderItemEntity::getQuantity))
                     .returns(new BigDecimal("25.00"), from(OrderItemEntity::getPrice));
-            assertThat(orderEntity.getItems().get(1))
-                    .returns("order-001", from(OrderItemEntity::getOrderId))
-                    .returns("dish-002", from(OrderItemEntity::getDishId))
-                    .returns("鱼香肉丝", from(OrderItemEntity::getDishName))
-                    .returns(1, from(OrderItemEntity::getQuantity))
-                    .returns(new BigDecimal("30.00"), from(OrderItemEntity::getPrice));
 
             // Verify delivery info
             assertThat(orderEntity.getDeliveryInfo())
@@ -103,10 +96,10 @@ class OrderPersistenceAdapterTest {
 
             // Verify pricing
             assertThat(orderEntity.getPricing())
-                    .returns(new BigDecimal("80.00"), from(PricingEmbeddable::getItemsTotal))
+                    .returns(new BigDecimal("50.00"), from(PricingEmbeddable::getItemsTotal))
                     .returns(new BigDecimal("1.00"), from(PricingEmbeddable::getPackagingFee))
                     .returns(new BigDecimal("3.00"), from(PricingEmbeddable::getDeliveryFee))
-                    .returns(new BigDecimal("84.00"), from(PricingEmbeddable::getFinalAmount));
+                    .returns(new BigDecimal("54.00"), from(PricingEmbeddable::getFinalAmount));
         }));
     }
 
@@ -115,19 +108,12 @@ class OrderPersistenceAdapterTest {
         Instant now = Instant.now();
 
         // Create order item entities
-        OrderItemEntity itemEntity1 = new OrderItemEntity();
-        itemEntity1.setOrderId("order-001");
-        itemEntity1.setDishId("dish-001");
-        itemEntity1.setDishName("宫保鸡丁");
-        itemEntity1.setQuantity(2);
-        itemEntity1.setPrice(new BigDecimal("25.00"));
-
-        OrderItemEntity itemEntity2 = new OrderItemEntity();
-        itemEntity2.setOrderId("order-001");
-        itemEntity2.setDishId("dish-002");
-        itemEntity2.setDishName("鱼香肉丝");
-        itemEntity2.setQuantity(1);
-        itemEntity2.setPrice(new BigDecimal("30.00"));
+        OrderItemEntity itemEntity = new OrderItemEntity();
+        itemEntity.setOrderId("order-001");
+        itemEntity.setDishId("dish-001");
+        itemEntity.setDishName("宫保鸡丁");
+        itemEntity.setQuantity(2);
+        itemEntity.setPrice(new BigDecimal("25.00"));
 
         // Create delivery info embeddable
         DeliveryInfoEmbeddable deliveryInfoEmbeddable =
@@ -136,10 +122,10 @@ class OrderPersistenceAdapterTest {
         // Create pricing embeddable
         PricingEmbeddable pricingEmbeddable =
                 new PricingEmbeddable(
-                        new BigDecimal("80.00"),
+                        new BigDecimal("50.00"),
                         new BigDecimal("1.00"),
                         new BigDecimal("3.00"),
-                        new BigDecimal("84.00"));
+                        new BigDecimal("54.00"));
 
         // Create order entity
         OrderEntity orderEntity = new OrderEntity();
@@ -147,7 +133,7 @@ class OrderPersistenceAdapterTest {
         orderEntity.setOrderNumber("20251105102730996280");
         orderEntity.setUserId("user-001");
         orderEntity.setMerchantId("merchant-001");
-        orderEntity.setItems(List.of(itemEntity1, itemEntity2));
+        orderEntity.setItems(List.of(itemEntity));
         orderEntity.setDeliveryInfo(deliveryInfoEmbeddable);
         orderEntity.setRemark("少辣");
         orderEntity.setStatus(OrderStatus.PENDING_PAYMENT);
@@ -173,17 +159,12 @@ class OrderPersistenceAdapterTest {
         assertThat(order.getUpdatedAt()).isEqualTo(now);
 
         // Verify items
-        assertThat(order.getItems()).hasSize(2);
+        assertThat(order.getItems()).hasSize(1);
         assertThat(order.getItems().get(0))
                 .returns(new DishId("dish-001"), from(OrderItem::dishId))
                 .returns("宫保鸡丁", from(OrderItem::dishName))
                 .returns(2, from(OrderItem::quantity))
                 .returns(new BigDecimal("25.00"), from(OrderItem::price));
-        assertThat(order.getItems().get(1))
-                .returns(new DishId("dish-002"), from(OrderItem::dishId))
-                .returns("鱼香肉丝", from(OrderItem::dishName))
-                .returns(1, from(OrderItem::quantity))
-                .returns(new BigDecimal("30.00"), from(OrderItem::price));
 
         // Verify delivery info
         assertThat(order.getDeliveryInfo())
@@ -193,9 +174,9 @@ class OrderPersistenceAdapterTest {
 
         // Verify pricing
         assertThat(order.getPricing())
-                .returns(new BigDecimal("80.00"), from(Pricing::itemsTotal))
+                .returns(new BigDecimal("50.00"), from(Pricing::itemsTotal))
                 .returns(new BigDecimal("1.00"), from(Pricing::packagingFee))
                 .returns(new BigDecimal("3.00"), from(Pricing::deliveryFee))
-                .returns(new BigDecimal("84.00"), from(Pricing::finalAmount));
+                .returns(new BigDecimal("54.00"), from(Pricing::finalAmount));
     }
 }

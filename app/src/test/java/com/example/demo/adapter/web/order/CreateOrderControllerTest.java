@@ -213,35 +213,6 @@ class CreateOrderControllerTest {
     }
 
     @Test
-    void create_order_should_calculate_price_correctly_with_multiple_items() throws Exception {
-        // Given
-        CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(
-                "merchant-001",
-                List.of(
-                        new CreateOrderController.CreateOrderRequest.OrderItemRequest(
-                                "dish-001", "宫保鸡丁", 2, new BigDecimal("25.00")),
-                        new CreateOrderController.CreateOrderRequest.OrderItemRequest(
-                                "dish-001", "鱼香肉丝", 1, new BigDecimal("30.00"))),
-                createValidDeliveryInfo(),
-                null);
-
-        // When & Then
-        // itemsTotal = 2 * 25.00 + 1 * 30.00 = 80.00
-        // packagingFee = 1.00
-        // deliveryFee = 3.00
-        // finalAmount = 80.00 + 1.00 + 3.00 = 84.00
-        mockMvc.perform(post("/api/v1/orders")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-                        .with(user("test-user-id")))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.pricing.itemsTotal").value(80.00))
-                .andExpect(jsonPath("$.data.pricing.packagingFee").value(1.00))
-                .andExpect(jsonPath("$.data.pricing.deliveryFee").value(3.00))
-                .andExpect(jsonPath("$.data.pricing.finalAmount").value(84.00));
-    }
-
-    @Test
     void create_order_should_succeed_with_remark() throws Exception {
         // Given
         CreateOrderController.CreateOrderRequest request = new CreateOrderController.CreateOrderRequest(

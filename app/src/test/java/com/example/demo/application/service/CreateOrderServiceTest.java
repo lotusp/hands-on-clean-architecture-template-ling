@@ -8,10 +8,9 @@ import com.example.demo.application.service.CreateOrderService.CreateOrderComman
 import com.example.demo.application.service.CreateOrderService.CreateOrderCommand.DeliveryInfoDto;
 import com.example.demo.application.service.CreateOrderService.CreateOrderCommand.OrderItemDto;
 import com.example.demo.domain.order.Order;
+import com.example.demo.domain.order.Pricing;
 import java.math.BigDecimal;
 import java.util.List;
-
-import com.example.demo.domain.order.Pricing;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

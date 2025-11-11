@@ -1,6 +1,5 @@
 package com.example.demo.adapter.web.order;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,8 +35,7 @@ class GetOrderControllerTest {
         String orderId = createTestOrder("test-user-001");
 
         // When & Then - Get the order
-        mockMvc.perform(get("/api/v1/orders/{orderId}", orderId)
-                        .with(user("test-user-001")))
+        mockMvc.perform(get("/api/v1/orders/{orderId}", orderId).with(user("test-user-001")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(0))
                 .andExpect(jsonPath("$.message").value("查询成功"))
@@ -68,8 +66,7 @@ class GetOrderControllerTest {
         String nonExistentOrderId = "550e8400-e29b-41d4-a716-446655440000";
 
         // When & Then
-        mockMvc.perform(get("/api/v1/orders/{orderId}", nonExistentOrderId)
-                        .with(user("test-user-001")))
+        mockMvc.perform(get("/api/v1/orders/{orderId}", nonExistentOrderId).with(user("test-user-001")))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("OrderNotFoundException"))
                 .andExpect(jsonPath("$.detail").value("订单不存在: " + nonExistentOrderId));
@@ -81,8 +78,7 @@ class GetOrderControllerTest {
         String orderId = createTestOrder("test-user-001");
 
         // When & Then - Try to access with user-002
-        mockMvc.perform(get("/api/v1/orders/{orderId}", orderId)
-                        .with(user("test-user-002")))
+        mockMvc.perform(get("/api/v1/orders/{orderId}", orderId).with(user("test-user-002")))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("OrderNotFoundException"))
                 .andExpect(jsonPath("$.detail").value("订单不存在: " + orderId));
@@ -95,8 +91,7 @@ class GetOrderControllerTest {
 
         // When & Then - Try to access without authentication
         // Spring Security returns 403 Forbidden when authentication is missing
-        mockMvc.perform(get("/api/v1/orders/{orderId}", orderId))
-                .andExpect(status().isForbidden());
+        mockMvc.perform(get("/api/v1/orders/{orderId}", orderId)).andExpect(status().isForbidden());
     }
 
     @Test
@@ -105,8 +100,7 @@ class GetOrderControllerTest {
         String orderId = createTestOrderWithRemark("test-user-004", "少辣");
 
         // When & Then
-        mockMvc.perform(get("/api/v1/orders/{orderId}", orderId)
-                        .with(user("test-user-004")))
+        mockMvc.perform(get("/api/v1/orders/{orderId}", orderId).with(user("test-user-004")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(0))
                 .andExpect(jsonPath("$.data.remark").value("少辣"));

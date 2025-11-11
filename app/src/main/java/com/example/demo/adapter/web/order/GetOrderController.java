@@ -23,8 +23,7 @@ public class GetOrderController {
 
     @GetMapping("/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
-    public GetOrderAdapter.GetOrderResponse getOrder(
-            @PathVariable String orderId, @AuthenticationPrincipal User user) {
+    public GetOrderAdapter.GetOrderResponse getOrder(@PathVariable String orderId, @AuthenticationPrincipal User user) {
         return getOrderAdapter.getOrder(orderId, user);
     }
 }

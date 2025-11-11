@@ -53,14 +53,8 @@ public abstract class OrdersBase extends ContractTestBase {
                         "user-token",
                         "merchant-001",
                         List.of(new GetOrderService.GetOrderResult.OrderItemDto(
-                                "dish-001",
-                                "宫保鸡丁",
-                                2,
-                                new BigDecimal("25.00"))),
-                        new GetOrderService.GetOrderResult.DeliveryInfoDto(
-                                "张三",
-                                "13800138000",
-                                "北京市朝阳区xxx街道xxx号"),
+                                "dish-001", "宫保鸡丁", 2, new BigDecimal("25.00"))),
+                        new GetOrderService.GetOrderResult.DeliveryInfoDto("张三", "13800138000", "北京市朝阳区xxx街道xxx号"),
                         "少辣",
                         "PENDING_PAYMENT",
                         new GetOrderService.GetOrderResult.PricingDto(
@@ -95,4 +89,3 @@ public abstract class OrdersBase extends ContractTestBase {
         }
     }
 }
-

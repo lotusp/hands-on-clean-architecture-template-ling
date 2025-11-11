@@ -8,7 +8,8 @@ public record Pricing(BigDecimal itemsTotal, BigDecimal packagingFee, BigDecimal
     public static final BigDecimal DELIVERY_FEE = new BigDecimal("3.00");
 
     public static Pricing calculate(List<OrderItem> items) {
-        BigDecimal itemsTotal = items.stream().map(OrderItem::subtotal).findFirst().orElse(BigDecimal.ZERO);
+        BigDecimal itemsTotal =
+                items.stream().map(OrderItem::subtotal).findFirst().orElse(BigDecimal.ZERO);
 
         BigDecimal finalAmount = itemsTotal.add(PACKAGING_FEE).add(DELIVERY_FEE);
 

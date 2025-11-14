@@ -22,21 +22,6 @@ configurations {
     }
 }
 
-sourceSets {
-    create("integrationTest") {
-        compileClasspath += sourceSets.main.get().output
-        runtimeClasspath += sourceSets.main.get().output
-    }
-}
-
-val integrationTestImplementation by configurations.getting {
-    extendsFrom(configurations.implementation.get())
-}
-
-val integrationTestRuntimeOnly by configurations.getting {
-    extendsFrom(configurations.runtimeOnly.get())
-}
-
 repositories {
     mavenCentral()
 }
@@ -56,18 +41,48 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    contractTestImplementation("org.springframework.cloud:spring-cloud-starter-contract-verifier")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    contractTestImplementation("org.springframework.cloud:spring-cloud-starter-contract-verifier")
     testAndDevelopmentOnly("org.springframework.boot:spring-boot-docker-compose")
-    integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
-    integrationTestImplementation("org.springframework.security:spring-security-test")
-    integrationTestRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
+}
+
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+        }
+
+        register<JvmTestSuite>("integrationTest") {
+            dependencies {
+                implementation(project())
+            }
+
+            targets {
+                all {
+                    testTask.configure {
+                        shouldRunAfter(test)
+                    }
+                }
+            }
+        }
+    }
+}
+
+configurations {
+    named("integrationTestImplementation") {
+        extendsFrom(configurations.implementation.get())
+        extendsFrom(configurations.testImplementation.get())
+    }
+    named("integrationTestRuntimeOnly") {
+        extendsFrom(configurations.runtimeOnly.get())
+        extendsFrom(configurations.testRuntimeOnly.get())
     }
 }
 
@@ -98,15 +113,6 @@ tasks.withType<Test>().configureEach {
     finalizedBy(tasks.named("jacocoTestReport"))
 }
 
-val integrationTest =
-    tasks.register<Test>("integrationTest") {
-        description = "Runs integration tests."
-        group = "verification"
-        testClassesDirs = sourceSets["integrationTest"].output.classesDirs
-        classpath = sourceSets["integrationTest"].runtimeClasspath
-        shouldRunAfter("test")
-    }
-
 tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-parameters")
 }
@@ -132,5 +138,5 @@ tasks.named<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
 
 tasks.named("check") {
     dependsOn(tasks.named("jacocoTestCoverageVerification"))
-    dependsOn(integrationTest)
+    dependsOn(testing.suites.named("integrationTest"))
 }

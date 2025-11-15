@@ -1,8 +1,4 @@
 spring:
-  docker:
-    compose:
-      skip:
-        in-tests: true
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver

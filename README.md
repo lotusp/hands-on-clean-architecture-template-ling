@@ -15,12 +15,12 @@ HoCATLing，Hands-on Clean Architecture Template Ling，即可落地的整洁架
 ### 设计原则
 
 - **简化项目结构**：不拆分多个独立的组件，所有代码在单一模块中组织
-- **简化依赖关系**：刻意不使用 DIP（依赖倒置原则），而是直接依赖实现
-- **适用场景**：适合小型项目和快速原型开发
+- **六边形架构**：应用层定义端口接口，适配器实现端口，遵循依赖倒置原则（DIP）
+- **适用场景**：适合小型项目和快速原型开发，同时保持良好的架构边界
 
 ### 架构图
 
-![HoCATLing Diagram](https://www.plantuml.com/plantuml/svg/ZPJFYXin3CRlVWezGFC29OJT3TrUsbAoXpqiIt76siJ48xcofcKeUVSsBidyyHZsbA3lztsIXPYxf5QqQuD99q_HYct1uPljWZuowJVR8ZnwiR1bXn_WAnEdQ1jq8tw7ZLew17nWSIXFsWTShn-u8sUbtsp0sNIiE6npEiY5t79WcRYUZrvnoNGPh6n2BAqDxsW2dyNs8sxBRMH2qZdtnH-EMeDlGy2UWpD7xn0cyoH5GTO-eZ5o7GMkm9JzOm2QQpBO68Dlh7gch00C_lj1UqBvvHiq06SpzJiR5UNZRzmN_YsJ2eU0CXEUSVzZXpyxJFhlDqMcX1aP7B3QB69bqlt_2Gf_3XYhYtcmNgsctDd0g91poaKiBo6Y99yKgS5Y6JkCdBooz3FX4wdNN1mnb-TdOKv_7rgCdrQMy-13O9qQ6kMdbs_DJ6bTNa4JF9AMfv3BYyNA9MJjieOwLMQDLpAfmEgML1ShRUfRcNMjS1juSTnQJw_bPGtAxM--o7BTSsBQ-coCUMcOtloXazp-DUVVFW5Wp1sIwzhm5m00)
+![HoCATLing Diagram](https://www.plantuml.com/plantuml/svg/ZPJFRjim3CRlUWe-mFG2Ws6q3TPTjg583pqKnQ1OR29K5ZMAtc1iUVSj0jpObWpib83VZ_pun_PD4iCoz5wbDnUYOTE3nLSpUBcd8DzCZt3lsC2EB7w0hnGeHTEXdV5xxCI4eySxOelyAAF7fhcZ8LZ3Ozk2DUcqaM6wjoDVo1rvuaNMqya9rf8kZPKcWRWt_ZzCu3ERSSRjg8yKCCYQ--AE9zc2tvk00tchJiuYBFf9WemaOqIbU6e59c39_bO0tLGPJ8pUTKOSXQm0NFDlhzeZya_NOGOYiT0Wy40iEL1oe7KxwMUrDBGc2lB7NtWe37SKXCbxv9NmX8VlU_mnO99_lobIIBcNMGRejegLbMvp1rpawtQjrkf1e_MIEokO1NATSYFr9KJav99WwB1OnXuZ9IV4uqhu5CH93iwOo_XPMDCFLulPQ6KuDxushLEJKHuzdncQFrfNwFhKdNSOfBn-3bU36yVF6kXscwhKcczX4G7zNgagRjki5h4oKlKtf8LdIxrnuQLuVkRAz1SQNLHUgvK3d9LwxYYykkF0sVyb6qpV0wLkCDYXzty1)
 
 <details>
 <summary>查看 PlantUML 源码</summary>
@@ -39,6 +39,8 @@ hide <<Boundary>> stereotype
 rectangle Boundary <<Boundary>> {
   component application {
     rectangle ApplicationService
+    portout Port
+    ApplicationService --> Port
   }
 
   component adapter:web {
@@ -59,7 +61,7 @@ rectangle Boundary <<Boundary>> {
     PersistenceAdapter --> Repository
     PersistenceAdapter --> Entity
   }
-  ApplicationService --> PersistenceAdapter
+  Port <|-- PersistenceAdapter
 
   component adapter:client {
     rectangle Client
@@ -69,12 +71,12 @@ rectangle Boundary <<Boundary>> {
     ClientAdapter --> Client
     ClientAdapter --> Client_Request_Response
   }
-  ApplicationService --> ClientAdapter
+  Port <|-- ClientAdapter
 
   ApplicationService -> [domain]
   WebAdapter --> [domain]
-  [domain] <-- PersistenceAdapter
-  [domain] <-- ClientAdapter
+  [domain] <--- ClientAdapter
+  [domain] <--- PersistenceAdapter
 }
 
 [configuration] --> Boundary
@@ -89,7 +91,7 @@ rectangle Boundary <<Boundary>> {
 | 层级 | 职责 | 示例组件 |
 |------|------|---------|
 | **adapter:web** | 处理 HTTP 请求和响应 | Controller, WebAdapter, Request/Response |
-| **application** | 业务逻辑编排 | ApplicationService |
+| **application** | 业务逻辑编排 | ApplicationService, Ports |
 | **adapter:persistence** | 数据持久化 | Repository, Entity, PersistenceAdapter |
 | **adapter:client** | 外部服务调用 | Client, ClientAdapter |
 | **domain** | 领域模型和业务规则 | Domain Objects |

@@ -5,6 +5,8 @@ import com.example.demo.adapter.persistence.order.OrderEntity;
 import com.example.demo.adapter.persistence.order.OrderEntityRepository;
 import com.example.demo.adapter.persistence.order.OrderItemEntity;
 import com.example.demo.adapter.persistence.order.PricingEmbeddable;
+import com.example.demo.application.port.LoadOrderPort;
+import com.example.demo.application.port.SaveOrderPort;
 import com.example.demo.domain.dish.DishId;
 import com.example.demo.domain.merchant.MerchantId;
 import com.example.demo.domain.order.DeliveryInfo;
@@ -22,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class OrderPersistenceAdapter {
+public class OrderPersistenceAdapter implements SaveOrderPort, LoadOrderPort {
 
     private final OrderEntityRepository orderEntityRepository;
 

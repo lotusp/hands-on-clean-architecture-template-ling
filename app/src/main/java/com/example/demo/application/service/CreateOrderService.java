@@ -1,6 +1,6 @@
 package com.example.demo.application.service;
 
-import com.example.demo.adapter.persistence.order.adapter.OrderPersistenceAdapter;
+import com.example.demo.application.port.SaveOrderPort;
 import com.example.demo.domain.dish.DishId;
 import com.example.demo.domain.merchant.MerchantId;
 import com.example.demo.domain.order.DeliveryInfo;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CreateOrderService {
 
-    private final OrderPersistenceAdapter orderPersistenceAdapter;
+    private final SaveOrderPort saveOrderPort;
 
     public record CreateOrderCommand(
             @NotNull String userId,
@@ -68,7 +68,7 @@ public class CreateOrderService {
 
         Order order = new Order(userId, merchantId, items, deliveryInfo, command.remark());
 
-        orderPersistenceAdapter.save(order);
+        saveOrderPort.save(order);
 
         return new CreateOrderResult(
                 order.getId().value(),

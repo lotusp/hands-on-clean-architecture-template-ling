@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
-import com.example.demo.adapter.persistence.order.adapter.OrderPersistenceAdapter;
+import com.example.demo.application.port.LoadOrderPort;
 import com.example.demo.application.service.GetOrderService.GetOrderQuery;
 import com.example.demo.application.service.GetOrderService.GetOrderResult;
 import com.example.demo.domain.dish.DishId;
@@ -31,7 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class GetOrderServiceTest {
 
     @Mock
-    OrderPersistenceAdapter orderPersistenceAdapter;
+    LoadOrderPort loadOrderPort;
 
     @InjectMocks
     GetOrderService getOrderService;
@@ -61,7 +61,7 @@ class GetOrderServiceTest {
                 createdAt,
                 createdAt);
 
-        when(orderPersistenceAdapter.findById(new OrderId(orderId))).thenReturn(Optional.of(order));
+        when(loadOrderPort.findById(new OrderId(orderId))).thenReturn(Optional.of(order));
 
         GetOrderQuery query = new GetOrderQuery(orderId, userId);
 
@@ -105,7 +105,7 @@ class GetOrderServiceTest {
         String orderId = "non-existent-order";
         String userId = "user-001";
 
-        when(orderPersistenceAdapter.findById(new OrderId(orderId))).thenReturn(Optional.empty());
+        when(loadOrderPort.findById(new OrderId(orderId))).thenReturn(Optional.empty());
 
         GetOrderQuery query = new GetOrderQuery(orderId, userId);
 
@@ -140,7 +140,7 @@ class GetOrderServiceTest {
                 createdAt,
                 createdAt);
 
-        when(orderPersistenceAdapter.findById(new OrderId(orderId))).thenReturn(Optional.of(order));
+        when(loadOrderPort.findById(new OrderId(orderId))).thenReturn(Optional.of(order));
 
         GetOrderQuery query = new GetOrderQuery(orderId, requestingUserId);
 
